@@ -1,0 +1,1 @@
+run = testrun $(1) $(TESTOPTS)
