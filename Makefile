@@ -3,11 +3,11 @@ CHARMC= ampicxx $(OPTS)
 
 all: pgm
 
-pgm: test.o
-	$(CHARMC) -o pgm test.o -balancer RandCentLB
+pgm: mpi.o
+	$(CHARMC) -o pgm mpi.o -balancer RandCentLB
 
-test.o: test.C
-	$(CHARMC) -c test.C
+mpi.o: mpi.c
+	$(CHARMC) -c mpi.c
 
 #
 #

@@ -4,6 +4,7 @@
 #include <string.h>
 #include "mpi.h"
 #include "tempo.h"
+// #include "charm.h"  // <- remover se utiliar mpicc
 
 #define  L 32   // no. de pontos em r, varia com i
 #define  M L  // no. de pontos em z, varia com j
@@ -20,77 +21,77 @@ int main(int argc, char *argv[])
 {
 	// --------variaveis da funo evaporao---------
 	int tt[4][1];
-	double TEv[4][1];
-	double A[4][2];
-	double A2[2][2];
-	double mataux[2][4];
-	double mat1[2][4];
-	double mat2[2][2];
-	double mat3[2][4];
-	double x[2][1];
+	double TEv[4][1],
+	A[4][2],
+	A2[2][2],
+	mataux[2][4],
+	mat1[2][4],
+	mat2[2][2],
+	mat3[2][4],
+	x[2][1];
 
 	//--------DEFINICAO DA MALHA ----------
-	int nn=100;  //iteraes temporais, varia com k
-	int nc = 60;  //nmero de q testados
-	double R=0.15;   // raio do tubo,m
-	double h=0.33;   //altura do solo,m
-	double dr;
-	double dz;
-	double dt=0.3; // horas
-	double T0 = 0.65;
-	double Tr=0.01;
-	double Ts=0.76; //teor de umidade de saturao, dimensional
-	double T00;
+	 int nn=100,  //iteraes temporais, varia com k
+	 nc = 60;  //nmero de q testados
+	 double R=0.15,   // raio do tubo,m
+	 h=0.33,  //altura do solo,m
+	 dr,
+	 dz,
+	 dt=0.3, // horas
+	 T0 = 0.65,
+	 Tr=0.01,
+	 Ts=0.76,//teor de umidade de saturao, dimensional
+	T00;
 
 	//-----------curva de reteno de ua -----------
-	double a=0.467; //%0.674;%0.526;%;  % coeficiente do Psi na equao do potencial */
-	double m=0.934; //%0.768;%0.519;%;  % expoente na equao do potencial */
-	double n;
-	double tempo;
-	double Ko=0.000004; //condutividade hidrlica de saturao
-	double T[L][M];
-	double T1[L][M];
-	double T2[L][M];
-	double T3[L][M];
-	double Sf[L][M];
-	double TN[L][M];
-	double te[100][1];
-	double erro[60];
-	double vqot[60];
-	double Menor = 100000000;
-	double qo = 0.035; //fluxo de transpirao mimo (m3/hora)
-	double qM = 0.09; //fluxo de transpirao mimo
-	double dq;
-	double startwtime = 0.0, endwtime;
+	double a=0.467,//%0.674;%0.526;%;  % coeficiente do Psi na equao do potencial */
+	m=0.934, //%0.768;%0.519;%;  % expoente na equao do potencial */
+	n,
+	tempo,
+	 Ko=0.000004, //condutividade hidrlica de saturao
+	 T[L][M],
+	 T1[L][M],
+	 T2[L][M],
+	 T3[L][M],
+	 Sf[L][M],
+	 TN[L][M],
+	 te[100][1],
+	 erro[60],
+	vqot[60],
+	 Menor = 100000000,
+	 qo = 0.035, //fluxo de transpirao mimo (m3/hora)
+	 qM = 0.09, //fluxo de transpirao mimo
+	 dq;
+	// double startwtime = 0.0, endwtime;
 
 	int kk = 0,
-	iot = 0,
-	tamanho = 0;
+	// iot = 0,
+	 tamanho = 0;
 
-	double ero = 0,
+	 double ero = 0,
 	Tsup = 0,
-	SQE10 = 0,
-	SQE20 = 0,
-	SQE30 = 0,
-	S1 = 0,
-	S2 = 0,
-	S3 = 0,
-	Med = 0,
-	SQT = 0,
+	// SQE10 = 0,
+	// SQE20 = 0,
+	// SQE30 = 0,
+	 S1 = 0,
+	 S2 = 0,
+	 S3 = 0,
+	 Med = 0,
+	 SQT = 0,
 	SQT1 = 0,
-	SQT2 = 0,
-	SQT3 = 0,
-	R2 = 0,
-	pow1 = 0,
-	pow2 = 0,
-	pow3 = 0,
-	q = 0,
-	qq = 0,
-	qot = 0,
-	q1 = 0,
-	q2 = 0,
-	q3 = 0,
-	r = 0,
+	 SQT2 = 0,
+	 SQT3 = 0,
+	 R2 = 0,
+	// pow1 = 0,
+	// pow2 = 0,
+	// pow3 = 0,
+	 q = 0,
+	 qq = 0,
+	 qot = 0,
+	 q1 = 0,
+	 q2 = 0,
+	 q3 = 0,
+	 r = 0,
 	KE = 0,
 	KW = 0,
 	KP = 0,
@@ -114,6 +115,8 @@ int main(int argc, char *argv[])
 	tempo=nn*dt;
 	dq=(qM-qo)/59;
 	n=2/(1-m); //expoente na equao do potencial, Burdines
+
+
 	int iv,j,i,i1,j1;
 	int nProc, proc;
 	int posi = 0;
@@ -133,9 +136,157 @@ int main(int argc, char *argv[])
 	{
 
 
+		// evaporacao();
 
 
-		evaporacao();
+
+	double valor=0;
+	double linha1[4];
+	double linha2[4];
+	double laux[4];
+	double soma=0, soma1=0, soma2=0;
+	int nump=4; // nmero de pontos
+	int i,z,y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,y10,y11,y12,y13;
+	tt[1][1]=0;
+	tt[2][1]=10;
+	tt[3][1]=20;
+	tt[4][1]=30;
+	TEv[1][1]=T00;
+	TEv[2][1]=0.75*T00;
+	TEv[3][1]=0.5*T00;
+	TEv[4][1]=0.3*T00;
+
+	for (i=1; i <=nump; i++){
+		A[i][1]=tt[i][1];
+		A[i][2]=1;
+	}
+	// x=inv(A'*A)*A'*TEv
+	for (y0 = 1; y0 <=4; y0++){
+		for (z = 1; z <=2; z++){                    // tranposta de A'
+			mat1[z][y0] = A[y0][z];
+			mataux[z][y0] = A[y0][z];
+		}
+	}
+	for (y1 = 1; y1 <=4; y1++){                       //
+		soma = soma + (mat1[1][y1] * A[y1][1]);   //
+	}                                                 //
+	A2[1][1] = soma;                                  //
+	soma = 0;                                         //
+	for (y2 = 1; y2 <=4; y2++){                       //
+		soma = soma + (mat1[1][y2] * A[y2][2]);   //
+	}                                                 //
+	A2[1][2] = soma;                                  // multiplicao de A'*A
+	soma = 0;                                         //  A2 = (mat1 * A)
+	for (y3 = 1; y3 <=4; y3++){                       //
+		soma = soma + (mat1[2][y3] * A[y3][1]);   //
+	}                                                 //
+	A2[2][1] = soma;                                  //
+	soma = 0;                                         //
+	for (y4 = 1; y4 <=4; y4++){                       //
+		soma = soma + (mat1[2][y4] * A[y4][2]);   //
+	}                                                 //
+	A2[2][2] = soma;                                  //
+	soma = 0;                                         //
+
+	// A SEGUIR MATRIZ INVERSA DE A2 E GRAVA EM MAT2
+	linha1[0] = A2[1][1];
+	linha1[1] = A2[1][2];
+	linha1[2] = 1;
+	linha1[3] = 0;                           //definindo a malha
+	linha2[0] = A2[2][1];
+	linha2[1] = A2[2][2];
+	linha2[2] = 0;
+	linha2[3] = 1;
+	//1 regra - o valor de linha1[0] deverser 1 - capturar o valor e dividir linha1 por ele
+	valor = linha1[0];
+	linha1[0] = linha1[0] / valor;
+	linha1[1] = linha1[1] / valor;
+	linha1[2] = linha1[2] / valor;
+	linha1[3] = linha1[3] / valor;
+	//2 regra - zerar o valor de linha2[0] - capturar o valor e multiplicar por (-) ele
+	//toda a linha1 e somar com a linha2;
+	valor = linha2[0];
+	laux[0] = linha1[0] * (-valor);
+	laux[1] = linha1[1] * (-valor);
+	laux[2] = linha1[2] * (-valor);
+	laux[3] = linha1[3] * (-valor);
+	linha2[0] = laux[0] + linha2[0];
+	linha2[1] = laux[1] + linha2[1];
+	linha2[2] = laux[2] + linha2[2];
+	linha2[3] = laux[3] + linha2[3];
+	//3 regra - o valor de linha2[1] deverser 1 - capturar o valor e dividir linha2 por ele
+	valor = linha2[1];
+	linha2[0] = linha2[0] / valor;
+	linha2[1] = linha2[1] / valor;
+	linha2[2] = linha2[2] / valor;
+	linha2[3] = linha2[3] / valor;
+	//4 regra - zerar o valor de linha1[1] - capturar o valor e multiplicar por (-) ele
+	//toda a linha2 e somar com a linha1;
+	valor = linha1[1];
+	laux[0] = linha2[0] * (-valor);
+	laux[1] = linha2[1] * (-valor);
+	laux[2] = linha2[2] * (-valor);
+	laux[3] = linha2[3] * (-valor);
+	linha1[0] = laux[0] + linha1[0];
+	linha1[1] = laux[1] + linha1[1];
+	linha1[2] = laux[2] + linha1[2];
+	linha1[3] = laux[3] + linha1[3];
+	//GRAVANDO EM MAT2
+	mat2[1][1] = linha1[2];
+	mat2[1][2] = linha1[3];
+	mat2[2][1] = linha2[2];
+	mat2[2][2] = linha2[3];
+
+	//inv(A'*A)*A' ou seja mat2 * mat1
+	for (y5 = 1; y5 <=2; y5++){
+		soma = soma + (mataux[y5][1] * mat2[y5][1]);
+	}
+	mat3[1][1] = soma;
+	soma = 0;
+	for (y6 = 1; y6 <=2; y6++){
+		soma = soma + (mataux[y6][2] * mat2[y6][1]);
+	}
+	mat3[1][2] = soma;
+	soma = 0;
+	for (y7 = 1; y7 <=2; y7++){
+		soma = soma + (mataux[y7][3] * mat2[y7][1]);
+	}
+	mat3[1][3] = soma;
+	soma = 0;
+	for (y8 = 1; y8 <=2; y8++){                                   //    multiplicao
+		soma = soma + (mataux[y8][4] * mat2[y8][1]);          //    mat3 =inv(A'*A)*A'
+	}
+	mat3[1][4] = soma;
+	soma = 0;
+	for (y9 = 1; y9 <=2; y9++){
+		soma = soma + (mataux[y9][1] * mat2[y9][2]);
+	}
+	mat3[2][1] = soma;
+	soma = 0;
+	for (y10 = 1; y10 <=2; y10++){
+		soma = soma + (mataux[y10][2]*mat2[y10][2]);
+	}
+	mat3[2][2] = soma;
+	soma = 0;
+	for (y11 = 1; y11 <=2; y11++){
+		soma = soma + (mataux[y11][3]*mat2[y11][2]);
+	}
+	mat3[2][3] = soma;
+	soma = 0;
+	for (y12 = 1; y12 <=2; y12++){
+		soma = soma + (mataux[y12][4]*mat2[y12][2]);
+	}
+	mat3[2][4] = soma;
+	soma = 0;
+
+	//FINALIZANDO x = mat3 * TEv;
+	for (y13 = 1; y13 <=4; y13++){
+		soma1 = soma1 + (mat3[1][y13]*TEv[y13][1]);
+		soma2 = soma2 + (mat3[1+1][y13]*TEv[y13][1]);
+	}
+	x[1][1] = soma1;
+	x[2][1] = soma2;
+
 		double evap1 = x[1][1];
 		double evap2 = x[2][1];
 		int pos_ini = 1;
@@ -166,8 +317,8 @@ int main(int argc, char *argv[])
 		pos_ini = 0;
 		pos_fim = 0;
 		for (ratual = 1; ratual <=(nProc-1); ratual++){
-            MPI_Recv(vetor_erro, tamanho, MPI_DOUBLE, ratual, 10, MPI_COMM_WORLD, &status);
-           	MPI_Recv(vetor_qot, tamanho, MPI_DOUBLE, ratual, 10, MPI_COMM_WORLD, &status);
+	            MPI_Recv(vetor_erro, tamanho, MPI_DOUBLE, ratual, 10, MPI_COMM_WORLD, &status);
+	           	MPI_Recv(vetor_qot, tamanho, MPI_DOUBLE, ratual, 10, MPI_COMM_WORLD, &status);
 //			printf(" \n\n recebeu de %d", ratual);
 //			endwtime = MPI_Wtime();
 //			printf("\nwall clock time = %f\n",endwtime);
@@ -211,7 +362,7 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		printf(" \n\n Erro: %f \n\n", qot);
+		printf(" \n\n Erro: %0.10f \n\n", qot);
 
 		//---escolha do menor Erro---
 		//---t = 10 h -------
@@ -420,165 +571,165 @@ double POT(double x){
 //************************************************** evaporação ****************************************************
 // FUNO PARA CCULO DOS PARETROS DA EVAPORAO---AJUSTE DE CURVAS EM Z=0  EVAPORAO-----
 
-double evaporacao(){
-	int tt[4][1];
-	double TEv[4][1];
-	double A[4][2];
-	double A2[2][2];
-	double mataux[2][4];
-	double mat1[2][4];
-	double mat2[2][2];
-	double mat3[2][4];
-	double x[2][1];
-	double T00;
+// double evaporacao(){
+// 	int tt[4][1];
+// 	double TEv[4][1];
+// 	double A[4][2];
+// 	double A2[2][2];
+// 	double mataux[2][4];
+// 	double mat1[2][4];
+// 	double mat2[2][2];
+// 	double mat3[2][4];
+// 	double x[2][1];
+// 	double T00;
 
-	double valor=0;
-	double linha1[4];
-	double linha2[4];
-	double laux[4];
-	double soma=0, soma1=0, soma2=0;
-	int nump=4; // nmero de pontos
-	int i,z,y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,y10,y11,y12,y13;
-	tt[1][1]=0;
-	tt[2][1]=10;
-	tt[3][1]=20;
-	tt[4][1]=30;
-	TEv[1][1]=T00;
-	TEv[2][1]=0.75*T00;
-	TEv[3][1]=0.5*T00;
-	TEv[4][1]=0.3*T00;
+// 	double valor=0;
+// 	double linha1[4];
+// 	double linha2[4];
+// 	double laux[4];
+// 	double soma=0, soma1=0, soma2=0;
+// 	int nump=4; // nmero de pontos
+// 	int i,z,y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,y10,y11,y12,y13;
+// 	tt[1][1]=0;
+// 	tt[2][1]=10;
+// 	tt[3][1]=20;
+// 	tt[4][1]=30;
+// 	TEv[1][1]=T00;
+// 	TEv[2][1]=0.75*T00;
+// 	TEv[3][1]=0.5*T00;
+// 	TEv[4][1]=0.3*T00;
 
-	for (i=1; i <=nump; i++){
-		A[i][1]=tt[i][1];
-		A[i][2]=1;
-	}
-	// x=inv(A'*A)*A'*TEv
-	for (y0 = 1; y0 <=4; y0++){
-		for (z = 1; z <=2; z++){                    // tranposta de A'
-			mat1[z][y0] = A[y0][z];
-			mataux[z][y0] = A[y0][z];
-		}
-	}
-	for (y1 = 1; y1 <=4; y1++){                       //
-		soma = soma + (mat1[1][y1] * A[y1][1]);   //
-	}                                                 //
-	A2[1][1] = soma;                                  //
-	soma = 0;                                         //
-	for (y2 = 1; y2 <=4; y2++){                       //
-		soma = soma + (mat1[1][y2] * A[y2][2]);   //
-	}                                                 //
-	A2[1][2] = soma;                                  // multiplicao de A'*A
-	soma = 0;                                         //  A2 = (mat1 * A)
-	for (y3 = 1; y3 <=4; y3++){                       //
-		soma = soma + (mat1[2][y3] * A[y3][1]);   //
-	}                                                 //
-	A2[2][1] = soma;                                  //
-	soma = 0;                                         //
-	for (y4 = 1; y4 <=4; y4++){                       //
-		soma = soma + (mat1[2][y4] * A[y4][2]);   //
-	}                                                 //
-	A2[2][2] = soma;                                  //
-	soma = 0;                                         //
+// 	for (i=1; i <=nump; i++){
+// 		A[i][1]=tt[i][1];
+// 		A[i][2]=1;
+// 	}
+// 	// x=inv(A'*A)*A'*TEv
+// 	for (y0 = 1; y0 <=4; y0++){
+// 		for (z = 1; z <=2; z++){                    // tranposta de A'
+// 			mat1[z][y0] = A[y0][z];
+// 			mataux[z][y0] = A[y0][z];
+// 		}
+// 	}
+// 	for (y1 = 1; y1 <=4; y1++){                       //
+// 		soma = soma + (mat1[1][y1] * A[y1][1]);   //
+// 	}                                                 //
+// 	A2[1][1] = soma;                                  //
+// 	soma = 0;                                         //
+// 	for (y2 = 1; y2 <=4; y2++){                       //
+// 		soma = soma + (mat1[1][y2] * A[y2][2]);   //
+// 	}                                                 //
+// 	A2[1][2] = soma;                                  // multiplicao de A'*A
+// 	soma = 0;                                         //  A2 = (mat1 * A)
+// 	for (y3 = 1; y3 <=4; y3++){                       //
+// 		soma = soma + (mat1[2][y3] * A[y3][1]);   //
+// 	}                                                 //
+// 	A2[2][1] = soma;                                  //
+// 	soma = 0;                                         //
+// 	for (y4 = 1; y4 <=4; y4++){                       //
+// 		soma = soma + (mat1[2][y4] * A[y4][2]);   //
+// 	}                                                 //
+// 	A2[2][2] = soma;                                  //
+// 	soma = 0;                                         //
 
-	// A SEGUIR MATRIZ INVERSA DE A2 E GRAVA EM MAT2
-	linha1[0] = A2[1][1];
-	linha1[1] = A2[1][2];
-	linha1[2] = 1;
-	linha1[3] = 0;                           //definindo a malha
-	linha2[0] = A2[2][1];
-	linha2[1] = A2[2][2];
-	linha2[2] = 0;
-	linha2[3] = 1;
-	//1 regra - o valor de linha1[0] deverser 1 - capturar o valor e dividir linha1 por ele
-	valor = linha1[0];
-	linha1[0] = linha1[0] / valor;
-	linha1[1] = linha1[1] / valor;
-	linha1[2] = linha1[2] / valor;
-	linha1[3] = linha1[3] / valor;
-	//2 regra - zerar o valor de linha2[0] - capturar o valor e multiplicar por (-) ele
-	//toda a linha1 e somar com a linha2;
-	valor = linha2[0];
-	laux[0] = linha1[0] * (-valor);
-	laux[1] = linha1[1] * (-valor);
-	laux[2] = linha1[2] * (-valor);
-	laux[3] = linha1[3] * (-valor);
-	linha2[0] = laux[0] + linha2[0];
-	linha2[1] = laux[1] + linha2[1];
-	linha2[2] = laux[2] + linha2[2];
-	linha2[3] = laux[3] + linha2[3];
-	//3 regra - o valor de linha2[1] deverser 1 - capturar o valor e dividir linha2 por ele
-	valor = linha2[1];
-	linha2[0] = linha2[0] / valor;
-	linha2[1] = linha2[1] / valor;
-	linha2[2] = linha2[2] / valor;
-	linha2[3] = linha2[3] / valor;
-	//4 regra - zerar o valor de linha1[1] - capturar o valor e multiplicar por (-) ele
-	//toda a linha2 e somar com a linha1;
-	valor = linha1[1];
-	laux[0] = linha2[0] * (-valor);
-	laux[1] = linha2[1] * (-valor);
-	laux[2] = linha2[2] * (-valor);
-	laux[3] = linha2[3] * (-valor);
-	linha1[0] = laux[0] + linha1[0];
-	linha1[1] = laux[1] + linha1[1];
-	linha1[2] = laux[2] + linha1[2];
-	linha1[3] = laux[3] + linha1[3];
-	//GRAVANDO EM MAT2
-	mat2[1][1] = linha1[2];
-	mat2[1][2] = linha1[3];
-	mat2[2][1] = linha2[2];
-	mat2[2][2] = linha2[3];
+// 	// A SEGUIR MATRIZ INVERSA DE A2 E GRAVA EM MAT2
+// 	linha1[0] = A2[1][1];
+// 	linha1[1] = A2[1][2];
+// 	linha1[2] = 1;
+// 	linha1[3] = 0;                           //definindo a malha
+// 	linha2[0] = A2[2][1];
+// 	linha2[1] = A2[2][2];
+// 	linha2[2] = 0;
+// 	linha2[3] = 1;
+// 	//1 regra - o valor de linha1[0] deverser 1 - capturar o valor e dividir linha1 por ele
+// 	valor = linha1[0];
+// 	linha1[0] = linha1[0] / valor;
+// 	linha1[1] = linha1[1] / valor;
+// 	linha1[2] = linha1[2] / valor;
+// 	linha1[3] = linha1[3] / valor;
+// 	//2 regra - zerar o valor de linha2[0] - capturar o valor e multiplicar por (-) ele
+// 	//toda a linha1 e somar com a linha2;
+// 	valor = linha2[0];
+// 	laux[0] = linha1[0] * (-valor);
+// 	laux[1] = linha1[1] * (-valor);
+// 	laux[2] = linha1[2] * (-valor);
+// 	laux[3] = linha1[3] * (-valor);
+// 	linha2[0] = laux[0] + linha2[0];
+// 	linha2[1] = laux[1] + linha2[1];
+// 	linha2[2] = laux[2] + linha2[2];
+// 	linha2[3] = laux[3] + linha2[3];
+// 	//3 regra - o valor de linha2[1] deverser 1 - capturar o valor e dividir linha2 por ele
+// 	valor = linha2[1];
+// 	linha2[0] = linha2[0] / valor;
+// 	linha2[1] = linha2[1] / valor;
+// 	linha2[2] = linha2[2] / valor;
+// 	linha2[3] = linha2[3] / valor;
+// 	//4 regra - zerar o valor de linha1[1] - capturar o valor e multiplicar por (-) ele
+// 	//toda a linha2 e somar com a linha1;
+// 	valor = linha1[1];
+// 	laux[0] = linha2[0] * (-valor);
+// 	laux[1] = linha2[1] * (-valor);
+// 	laux[2] = linha2[2] * (-valor);
+// 	laux[3] = linha2[3] * (-valor);
+// 	linha1[0] = laux[0] + linha1[0];
+// 	linha1[1] = laux[1] + linha1[1];
+// 	linha1[2] = laux[2] + linha1[2];
+// 	linha1[3] = laux[3] + linha1[3];
+// 	//GRAVANDO EM MAT2
+// 	mat2[1][1] = linha1[2];
+// 	mat2[1][2] = linha1[3];
+// 	mat2[2][1] = linha2[2];
+// 	mat2[2][2] = linha2[3];
 
-	//inv(A'*A)*A' ou seja mat2 * mat1
-	for (y5 = 1; y5 <=2; y5++){
-		soma = soma + (mataux[y5][1] * mat2[y5][1]);
-	}
-	mat3[1][1] = soma;
-	soma = 0;
-	for (y6 = 1; y6 <=2; y6++){
-		soma = soma + (mataux[y6][2] * mat2[y6][1]);
-	}
-	mat3[1][2] = soma;
-	soma = 0;
-	for (y7 = 1; y7 <=2; y7++){
-		soma = soma + (mataux[y7][3] * mat2[y7][1]);
-	}
-	mat3[1][3] = soma;
-	soma = 0;
-	for (y8 = 1; y8 <=2; y8++){                                   //    multiplicao
-		soma = soma + (mataux[y8][4] * mat2[y8][1]);          //    mat3 =inv(A'*A)*A'
-	}
-	mat3[1][4] = soma;
-	soma = 0;
-	for (y9 = 1; y9 <=2; y9++){
-		soma = soma + (mataux[y9][1] * mat2[y9][2]);
-	}
-	mat3[2][1] = soma;
-	soma = 0;
-	for (y10 = 1; y10 <=2; y10++){
-		soma = soma + (mataux[y10][2]*mat2[y10][2]);
-	}
-	mat3[2][2] = soma;
-	soma = 0;
-	for (y11 = 1; y11 <=2; y11++){
-		soma = soma + (mataux[y11][3]*mat2[y11][2]);
-	}
-	mat3[2][3] = soma;
-	soma = 0;
-	for (y12 = 1; y12 <=2; y12++){
-		soma = soma + (mataux[y12][4]*mat2[y12][2]);
-	}
-	mat3[2][4] = soma;
-	soma = 0;
+// 	//inv(A'*A)*A' ou seja mat2 * mat1
+// 	for (y5 = 1; y5 <=2; y5++){
+// 		soma = soma + (mataux[y5][1] * mat2[y5][1]);
+// 	}
+// 	mat3[1][1] = soma;
+// 	soma = 0;
+// 	for (y6 = 1; y6 <=2; y6++){
+// 		soma = soma + (mataux[y6][2] * mat2[y6][1]);
+// 	}
+// 	mat3[1][2] = soma;
+// 	soma = 0;
+// 	for (y7 = 1; y7 <=2; y7++){
+// 		soma = soma + (mataux[y7][3] * mat2[y7][1]);
+// 	}
+// 	mat3[1][3] = soma;
+// 	soma = 0;
+// 	for (y8 = 1; y8 <=2; y8++){                                   //    multiplicao
+// 		soma = soma + (mataux[y8][4] * mat2[y8][1]);          //    mat3 =inv(A'*A)*A'
+// 	}
+// 	mat3[1][4] = soma;
+// 	soma = 0;
+// 	for (y9 = 1; y9 <=2; y9++){
+// 		soma = soma + (mataux[y9][1] * mat2[y9][2]);
+// 	}
+// 	mat3[2][1] = soma;
+// 	soma = 0;
+// 	for (y10 = 1; y10 <=2; y10++){
+// 		soma = soma + (mataux[y10][2]*mat2[y10][2]);
+// 	}
+// 	mat3[2][2] = soma;
+// 	soma = 0;
+// 	for (y11 = 1; y11 <=2; y11++){
+// 		soma = soma + (mataux[y11][3]*mat2[y11][2]);
+// 	}
+// 	mat3[2][3] = soma;
+// 	soma = 0;
+// 	for (y12 = 1; y12 <=2; y12++){
+// 		soma = soma + (mataux[y12][4]*mat2[y12][2]);
+// 	}
+// 	mat3[2][4] = soma;
+// 	soma = 0;
 
-	//FINALIZANDO x = mat3 * TEv;
-	for (y13 = 1; y13 <=4; y13++){
-		soma1 = soma1 + (mat3[1][y13]*TEv[y13][1]);
-		soma2 = soma2 + (mat3[1+1][y13]*TEv[y13][1]);
-	}
-	x[1][1] = soma1;
-	x[2][1] = soma2;
-}
+// 	//FINALIZANDO x = mat3 * TEv;
+// 	for (y13 = 1; y13 <=4; y13++){
+// 		soma1 = soma1 + (mat3[1][y13]*TEv[y13][1]);
+// 		soma2 = soma2 + (mat3[1+1][y13]*TEv[y13][1]);
+// 	}
+// 	x[1][1] = soma1;
+// 	x[2][1] = soma2;
+// }
 
 //****************************************************** Worker ***************************************************
 
@@ -586,80 +737,77 @@ int worker(){
 
 
 	// --------variaveis da funo evaporao---------
-	int tt[4][1];
-	double TEv[4][1];
-	double A[4][2];
-	double A2[2][2];
-	double mataux[2][4];
-	double mat1[2][4];
-	double mat2[2][2];
-	double mat3[2][4];
-	double x[2][1];
+	// int tt[4][1];
+	// double TEv[4][1];
+	// double A[4][2];
+	// double A2[2][2];
+	// double mataux[2][4];
+	// double mat1[2][4];
+	// double mat2[2][2];
+	// double mat3[2][4];
+	//double x[2][1];
 
 	//--------DEFINICAO DA MALHA ----------
-	int nn=100;  //iteraes temporais, varia com k
-	int nc = 60;  //nmero de q testados
-	double R=0.15;   // raio do tubo,m
+	 int nn=100;  //iteraes temporais, varia com k
+	// int nc = 60;  //nmero de q testados
+	 double R=0.15;   // raio do tubo,m
 	double h=0.33;   //altura do solo,m
-	double dr;
-	double dz;
-	double dt=0.3; // horas
-	double T0 = 0.65;
-	double Tr=0.01;
+	 double dr;
+	 double dz;
+	 double dt=0.3; // horas
+	 double T0 = 0.65;
+	 double Tr=0.01;
 	double Ts=0.76; //teor de umidade de saturao, dimensional
-	double T00;
+	 double T00;
 
 	//-----------curva de reteno de ua -----------
-	double a=0.467; //%0.674;%0.526;%;  % coeficiente do Psi na equao do potencial */
-	double m=0.934; //%0.768;%0.519;%;  % expoente na equao do potencial */
-	double n;
-	double tempo;
+	// double a=0.467; //%0.674;%0.526;%;  % coeficiente do Psi na equao do potencial */
+	 double m=0.934; //%0.768;%0.519;%;  % expoente na equao do potencial */
+	 double n;
+	 double tempo;
 	double Ko=0.000004; //condutividade hidrlica de saturao
 	double T[L][M];
 	double T1[L][M];
 	double T2[L][M];
 	double T3[L][M];
-	double Sf[L][M];
-	double TN[L][M];
-	double te[100][1];
-	double erro[60];
-	double vqot[60];
-	double Menor = 100000000;
-	double qo = 0.035; //fluxo de transpirao mimo (m3/hora)
-	double qM = 0.09; //fluxo de transpirao mimo
-	double dq;
-	double startwtime = 0.0, endwtime;
+	 double Sf[L][M];
+	 double TN[L][M];
+	 double te[100][1];
+	// double erro[60];
+	// double vqot[60];
+	// double Menor = 100000000;
+	 double qo = 0.035; //fluxo de transpirao mimo (m3/hora)
+	 double qM = 0.09; //fluxo de transpirao mimo
+	 double dq;
+	// double startwtime = 0.0, endwtime;
 
 
-	double ero = 0,
-	Tsup = 0,
+	// double ero = 0,
+	double Tsup = 0,
 	SQE10 = 0,
 	SQE20 = 0,
 	SQE30 = 0,
-	S1 = 0,
-	S2 = 0,
-	S3 = 0,
-	Med = 0,
-	SQT = 0,
-	SQT1 = 0,
-	SQT2 = 0,
-	SQT3 = 0,
-	R2 = 0,
-	pow1 = 0,
-	pow2 = 0,
-	pow3 = 0,
+	// S1 = 0,
+	// S2 = 0,
+	// S3 = 0,
+	// Med = 0,
+	// SQT = 0,
+	// SQT1 = 0,
+	// SQT2 = 0,
+	// SQT3 = 0,
+	// R2 = 0,
 	q = 0,
-	qq = 0,
-	qot = 0,
+	 qq = 0,
+	// qot = 0,
 	q1 = 0,
-	q2 = 0,
-	q3 = 0,
-	r = 0,
+	 q2 = 0,
+	 q3 = 0,
+	 r = 0,
 	KE = 0,
-	KW = 0,
-	KP = 0,
+	 KW = 0,
+	 KP = 0,
 	KN = 0,
-	KS = 0,
+	 KS = 0,
 	AE = 0,
 	AW = 0,
 	AN = 0,
@@ -669,19 +817,24 @@ int worker(){
 	PMW = 0,
 	PMP = 0,
 	PMN = 0,
-	PMS = 0,
-	menor_erro = 0;
+	PMS = 0;
+	// menor_erro = 0;
 
+	dr=R/(L-1);
+	dz=h/(M-1);
+	T00=(T0-Tr)/(Ts-Tr); //teor de umidade inicial adimensional
+	tempo=nn*dt;
+	dq=(qM-qo)/59;
+	n=2/(1-m);
 
-
-	double To[L][M];
-	double evap1 = 0;
-	double evap2 = 0;
-	int pos_ini = 0;
-	int pos_fim = 0;
-	int tamanho = 0;
-	int posi = 0;
-	int j0, j1, j2, kk, i, j ,i1, jj, ii;
+	 double To[L][M],
+	 evap1 = 0,
+	 evap2 = 0;
+	 int pos_ini = 0,
+	 pos_fim = 0,
+	 tamanho = 0,
+	 posi = 0;
+	 int j0, j1, j2, kk, i, j ,i1, jj, ii;
 
 	for (j0=1; j0<=M; j0++){
 		for (i=1; i<=L; i++){
