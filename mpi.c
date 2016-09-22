@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mpi.h"
-
-
 #include "tempo.h"
 
 #define  L 32   // no. de pontos em r, varia com i
@@ -12,6 +10,14 @@
 
 	// TRANSPORTE DE AGUA NO SOLO EM COORDENDAS CILDRICAS
 
+//prototipação das funcoes
+	double KA(double x1, double x2);
+	double POT(double x);
+	double evaporacao();
+	int worker();
+
+int main(int argc, char *argv[])
+{
 	// --------variaveis da funo evaporao---------
 	int tt[4][1];
 	double TEv[4][1];
@@ -36,7 +42,6 @@
 	double Ts=0.76; //teor de umidade de saturao, dimensional
 	double T00;
 
-
 	//-----------curva de reteno de ua -----------
 	double a=0.467; //%0.674;%0.526;%;  % coeficiente do Psi na equao do potencial */
 	double m=0.934; //%0.768;%0.519;%;  % expoente na equao do potencial */
@@ -59,8 +64,6 @@
 	double startwtime = 0.0, endwtime;
 
 	int kk = 0,
-	i = 0,
-	j = 0,
 	iot = 0,
 	tamanho = 0;
 
@@ -104,17 +107,7 @@
 	PMN = 0,
 	PMS = 0,
 	menor_erro = 0;
-
-
-//prototipação das funcoes
-	double KA(double x1, double x2);
-	double POT(double x);
-	double evaporacao();
-	int worker();
-
-int main(int argc, char *argv[])
-{
-
+	// //////////////////////////////////////////////////////////////////////////////
 	dr=R/(L-1);
 	dz=h/(M-1);
 	T00=(T0-Tr)/(Ts-Tr); //teor de umidade inicial adimensional
@@ -379,6 +372,9 @@ double KA(double x1, double x2){
 	double a=0.467; // coeficiente do Psi na equao do potencial
 	double m=0.934; // expoente na equao do potencial
 	double n=2/(1-m); // expoente na equao do potencial, Burdines
+	double pow1 = 0,
+	pow2 = 0,
+	pow3 = 0;
 	if(x2 <= 0)
 		y=0;
 	else{
@@ -403,6 +399,10 @@ double POT(double x){
 	double a=0.674; //coeficiente do Psi na equao do potencial
 	double m=0.768; // expoente na equao do potencial
 	double n=2/(1-m); // expoente na equao do potencial, Burdines
+	double pow1 = 0,
+	pow2 = 0,
+	pow3 = 0;
+
 	if (x <= 0)
 		y= 0.35;
 	else{
@@ -421,6 +421,17 @@ double POT(double x){
 // FUNO PARA CCULO DOS PARETROS DA EVAPORAO---AJUSTE DE CURVAS EM Z=0  EVAPORAO-----
 
 double evaporacao(){
+	int tt[4][1];
+	double TEv[4][1];
+	double A[4][2];
+	double A2[2][2];
+	double mataux[2][4];
+	double mat1[2][4];
+	double mat2[2][2];
+	double mat3[2][4];
+	double x[2][1];
+	double T00;
+
 	double valor=0;
 	double linha1[4];
 	double linha2[4];
@@ -572,6 +583,97 @@ double evaporacao(){
 //****************************************************** Worker ***************************************************
 
 int worker(){
+
+
+	// --------variaveis da funo evaporao---------
+	int tt[4][1];
+	double TEv[4][1];
+	double A[4][2];
+	double A2[2][2];
+	double mataux[2][4];
+	double mat1[2][4];
+	double mat2[2][2];
+	double mat3[2][4];
+	double x[2][1];
+
+	//--------DEFINICAO DA MALHA ----------
+	int nn=100;  //iteraes temporais, varia com k
+	int nc = 60;  //nmero de q testados
+	double R=0.15;   // raio do tubo,m
+	double h=0.33;   //altura do solo,m
+	double dr;
+	double dz;
+	double dt=0.3; // horas
+	double T0 = 0.65;
+	double Tr=0.01;
+	double Ts=0.76; //teor de umidade de saturao, dimensional
+	double T00;
+
+	//-----------curva de reteno de ua -----------
+	double a=0.467; //%0.674;%0.526;%;  % coeficiente do Psi na equao do potencial */
+	double m=0.934; //%0.768;%0.519;%;  % expoente na equao do potencial */
+	double n;
+	double tempo;
+	double Ko=0.000004; //condutividade hidrlica de saturao
+	double T[L][M];
+	double T1[L][M];
+	double T2[L][M];
+	double T3[L][M];
+	double Sf[L][M];
+	double TN[L][M];
+	double te[100][1];
+	double erro[60];
+	double vqot[60];
+	double Menor = 100000000;
+	double qo = 0.035; //fluxo de transpirao mimo (m3/hora)
+	double qM = 0.09; //fluxo de transpirao mimo
+	double dq;
+	double startwtime = 0.0, endwtime;
+
+
+	double ero = 0,
+	Tsup = 0,
+	SQE10 = 0,
+	SQE20 = 0,
+	SQE30 = 0,
+	S1 = 0,
+	S2 = 0,
+	S3 = 0,
+	Med = 0,
+	SQT = 0,
+	SQT1 = 0,
+	SQT2 = 0,
+	SQT3 = 0,
+	R2 = 0,
+	pow1 = 0,
+	pow2 = 0,
+	pow3 = 0,
+	q = 0,
+	qq = 0,
+	qot = 0,
+	q1 = 0,
+	q2 = 0,
+	q3 = 0,
+	r = 0,
+	KE = 0,
+	KW = 0,
+	KP = 0,
+	KN = 0,
+	KS = 0,
+	AE = 0,
+	AW = 0,
+	AN = 0,
+	AS = 0,
+	APO = 0,
+	PME = 0,
+	PMW = 0,
+	PMP = 0,
+	PMN = 0,
+	PMS = 0,
+	menor_erro = 0;
+
+
+
 	double To[L][M];
 	double evap1 = 0;
 	double evap2 = 0;
@@ -579,7 +681,7 @@ int worker(){
 	int pos_fim = 0;
 	int tamanho = 0;
 	int posi = 0;
-	int j0, j1, j2, kk, i, i1, jj, ii;
+	int j0, j1, j2, kk, i, j ,i1, jj, ii;
 
 	for (j0=1; j0<=M; j0++){
 		for (i=1; i<=L; i++){
