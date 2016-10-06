@@ -13,6 +13,12 @@ mpi.o: mpi.c
 #
 # clean up .o, .mod, .exe and EMACS backup files
 #
+
+mpi: 
+	mpicc mpi.c -o m
+
+runmpi:
+	mpirun -np 4 m
 clean:
 	rm -f *.o *.mod pgm *~ conv-host charmrun test.o pgm.exe pgm.pdb pgm.ilk
 
