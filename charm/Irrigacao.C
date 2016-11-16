@@ -13,7 +13,7 @@ Irrigacao::Irrigacao (CkMigrateMessage *msg) { }
 
 void Irrigacao::worker (int emissor, double evap1, double evap2, int pos_ini, int pos_fim, int tamanho) {
 //--------DEFINIÇÃO DA MALHA ----------
-const int L=128; // no. de pontos em r, varia com i
+const int L=16; // no. de pontos em r, varia com i
 const int M= L; 
 int nn=100;  //iteraes temporais, varia com k
 int j = 0;
@@ -106,7 +106,7 @@ CkPrintf("\"Executado no  chare %d no PE %d (pedido pelo chare %d) = %d -- %d .\
 
 for (j0=1; j0<M; j0++){
 	for (i=1; i<L; i++){
-	T[i][j0]=T00;  //condio inicial para toda a malha
+T[i][j0]=T00;  //condio inicial para toda a malha
 }
 } 
 
@@ -140,52 +140,53 @@ for (ii=pos_ini; ii < pos_fim; ii++){  // contador dos chutes do PI
 	q=qo+(ii-1)*dq;
 	for (j1=1; j1<M; j1++){
 		for (i=1; i<L; i++){
-			T[i][j1]=T00;  //condio inicial para toda a malha 
-		}        
-	}
-	for (j2=1; j2<L; j2++){
-		for (i=1; i<M; i++) {
-		Sf[i][j2]=0;  //fonte zero para toda a malha 
-	}
+T[i][j1]=T00;  //condio inicial para toda a malha 
+}        
 }
+for (j2=1; j2<L; j2++){
+	for (i=1; i<M; i++) {
+Sf[i][j2]=0;  //fonte zero para toda a malha 
+}
+}
+
 for (kk=1; kk<=nn; kk++){   //TEMPORAL
 	te[kk][1]=(kk-1)*dt;
 	qq=q*exp(-0.05*((te[kk][1]-12)*(te[kk][1]-12))); 
 	for (i=2; i<=(L-1); i++){
-		Tsup=evap1*te[kk][1]+evap2; //teta em z=0 pela evaporao 
-		for (i1=1; i1<L; i1++){
-			T[1][i1]=Tsup; //condio de fronteira em z=0                          
-		}
-		for (j=2; j<=(M-1); j++){                       
+Tsup=evap1*te[kk][1]+evap2; //teta em z=0 pela evaporao 
+for (i1=1; i1<L; i1++){
+T[1][i1]=Tsup; //condio de fronteira em z=0                          
+}
+for (j=2; j<=(M-1); j++){                       
 //------------FONTE = TRANSPIRAO ----------------
-			q1=qq;
-			q2=qq;
-			q3=qq;
-			Sf[2][2]= qq*(T[2][2]-Tr); Sf[3][2]= qq*(T[3][2]-Tr);   
-			Sf[4][2]= qq*(T[4][2]-Tr); Sf[4][3]=q1*(T[4][3]-Tr);
-			Sf[5][2]= qq*(T[5][2]-Tr); Sf[5][3]=q1*(T[5][3]-Tr); Sf[5][4]=q2*(T[5][4]-Tr);
-			Sf[6][2]= qq*(T[6][2]-Tr); Sf[6][3]=q1*(T[6][3]-Tr);
-			Sf[6][4]=q2*(T[6][4]-Tr);Sf[6][5]=q3*(T[6][5]-Tr);
-			Sf[7][2]= qq*(T[7][2]-Tr); Sf[7][3]=q1*(T[7][3]-Tr); Sf[7][4]=q2*(T[7][4]-Tr);
-			Sf[8][2]= qq*(T[8][2]-Tr); Sf[8][3]=q1*(T[8][3]-Tr);
-			Sf[9][2]= qq*(T[9][2]-Tr); Sf[10][2]= qq*(T[10][2]-Tr);
-			r=((j-1)*dr)+(0.5 * dr);                 
-			KE= KA(Ko,T[i][j+1]);
-			KW= KA(Ko,T[i][j-1]);
-			KP= KA(Ko,T[i][j]);
-			KN= KA(Ko,T[i+1][j]);
-			KS= KA(Ko,T[i-1][j]);
-			AE= dt/dr*((KE-KW)/(4*dr)+KP/(2*r)+KP/dr);
-			AW= dt/dr*(-(KE-KW)/(4*dr)-KP/(2*r)+KP/dr);
-			AN= dt/(4*(dz*dz))*(KN-KS+4*KP);  
-			AS= dt/(4*(dz*dz))*(-KN+KS+4*KP); 
-			APO= -(2*dt*KP*(((1/dr)*(1/dr))+((1/dz)*(1/dz))));            
-			PME=POT(T[i][j+1]);
-			PMW=POT(T[i][j-1]);
-			PMP=POT(T[i][j]);
-			PMN=POT(T[i+1][j]);
-			PMS=POT(T[i-1][j]);
-			TN[i][j]=(AE*PME+AW*PMW+AN*PMN+AS*PMS+APO*PMP)+(KN-KS)/(2*dz)+T[i][j]-Sf[i][j]; 
+	q1=qq;
+	q2=qq;
+	q3=qq;
+	Sf[2][2]= qq*(T[2][2]-Tr); Sf[3][2]= qq*(T[3][2]-Tr);   
+	Sf[4][2]= qq*(T[4][2]-Tr); Sf[4][3]=q1*(T[4][3]-Tr);
+	Sf[5][2]= qq*(T[5][2]-Tr); Sf[5][3]=q1*(T[5][3]-Tr); Sf[5][4]=q2*(T[5][4]-Tr);
+	Sf[6][2]= qq*(T[6][2]-Tr); Sf[6][3]=q1*(T[6][3]-Tr);
+	Sf[6][4]=q2*(T[6][4]-Tr);Sf[6][5]=q3*(T[6][5]-Tr);
+	Sf[7][2]= qq*(T[7][2]-Tr); Sf[7][3]=q1*(T[7][3]-Tr); Sf[7][4]=q2*(T[7][4]-Tr);
+	Sf[8][2]= qq*(T[8][2]-Tr); Sf[8][3]=q1*(T[8][3]-Tr);
+	Sf[9][2]= qq*(T[9][2]-Tr); Sf[10][2]= qq*(T[10][2]-Tr);
+	r=((j-1)*dr)+(0.5 * dr);                 
+	KE= KA(Ko,T[i][j+1]);
+	KW= KA(Ko,T[i][j-1]);
+	KP= KA(Ko,T[i][j]);
+	KN= KA(Ko,T[i+1][j]);
+	KS= KA(Ko,T[i-1][j]);
+	AE= dt/dr*((KE-KW)/(4*dr)+KP/(2*r)+KP/dr);
+	AW= dt/dr*(-(KE-KW)/(4*dr)-KP/(2*r)+KP/dr);
+	AN= dt/(4*(dz*dz))*(KN-KS+4*KP);  
+	AS= dt/(4*(dz*dz))*(-KN+KS+4*KP); 
+	APO= -(2*dt*KP*(((1/dr)*(1/dr))+((1/dz)*(1/dz))));            
+	PME=POT(T[i][j+1]);
+	PMW=POT(T[i][j-1]);
+	PMP=POT(T[i][j]);
+	PMN=POT(T[i+1][j]);
+	PMS=POT(T[i-1][j]);
+	TN[i][j]=(AE*PME+AW*PMW+AN*PMN+AS*PMS+APO*PMP)+(KN-KS)/(2*dz)+T[i][j]-Sf[i][j]; 
 } //end do for do j
 
 TN[i][1]= TN[i][2]; // CONDIO DE FRONTEIRA EM r=R, isolamento
@@ -233,10 +234,10 @@ vetor_erro[posi] = SQE10+SQE20+SQE30;
 vetor_qot[posi] = q;
 posi++;
 
-} //end do ii, Problema inverso 
+} //end do ii, Problema inverso
+
+
 //retornar vetor
-// MPI_Send(vetor_erro, tamanho, MPI_DOUBLE, 0, 10, MPI_COMM_WORLD);
-// MPI_Send(vetor_qot, tamanho, MPI_DOUBLE, 0, 10, MPI_COMM_WORLD);
 
 int iv;
 for (iv = 0; iv < tamanho; iv++){
@@ -250,9 +251,12 @@ for (iv = 0; iv < tamanho; iv++){
 		Menor = Menor;
 	}
 }
+// mainProxy.retorno(qot);
 
-vfinal[cont]= qot;
-cont++;
+
+ vfinal[cont]= qot;
+ cont++;
+
 
 if(thisIndex == numChares-1){
 	double menor=0;
@@ -261,7 +265,7 @@ if(thisIndex == numChares-1){
 		if(menor>vfinal[i]) menor=vfinal[i];	
 	}
 
-	mainProxy.retorno(menor);
+	mainProxy.solucao(menor);
 
 //mainProxy.terminado();
 }

@@ -8,7 +8,9 @@ mainmodule main {
    		extern module Irrigacao;
    				mainchare Main {
 			      entry Main (CkArgMsg* msg);
-			      entry void retorno(double err);
+			      entry [sync] double KA(double x1, double x2);
+			      entry [sync] double POT(double x);
+			      entry void solucao(double qot);
 			      entry void terminado ();
   };
 };

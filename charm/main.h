@@ -8,7 +8,9 @@ Main (CkArgMsg* msg);
 
 Main (CkMigrateMessage* msg);
 
-void retorno(double err);
+double KA(double x1, double x2);
+double POT(double x);
+void solucao(double qot);
 void terminado();
 
  };
