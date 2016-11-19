@@ -1,2 +1,0 @@
-/home/pablo/charm/multicore-linux64/bin/charmc  -o main.o main.C
-Makefile:9: recipe for target 'main.o' failed
