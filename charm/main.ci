@@ -1,0 +1,15 @@
+mainmodule main {
+
+		readonly CProxy_Main mainProxy;
+		readonly int numChares; 
+
+   		extern module Irrigacao;
+   				mainchare Main {
+			      entry Main (CkArgMsg* msg);
+			      entry [sync] double KA(double x1, double x2);
+			      entry [sync] double POT(double x);
+			      entry void retorno(double qot,double ero);
+			      entry void solucaoOtima(double ero, double qot);
+			      entry void terminado ();
+  };
+};
