@@ -26,7 +26,7 @@ double x[2][1];
 const int nn=100;  //iterações temporais, varia com k
 const int L=16;   // no. de pontos em r, varia com i
 const int M=16;   // no. de pontos em z, varia com j
-const int nc = 60;  //número de q testados
+const int nc = 59;  //número de q testados
 const double R=0.15;   // raio do tubo,m
 const double h=0.33;   //altura do solo,m
 const double dr=R/(L-1);
@@ -339,8 +339,6 @@ double POT(double x){  // X é o teta
 
         evaporacao();
 
-       cout << "evap1=" << x[1][1] << "evap2=" << x[2][1] << "\n";
-
     //------------PROBLEMA INVERSO E DIRETO---------------------
 
     for (ii=1; ii <= nc; ii++){ 	// contador dos chutes do PI
@@ -395,7 +393,7 @@ double POT(double x){  // X é o teta
                   } //end do for do j
 
 		          TN[i][1]= TN[i][2]; // CONDIÇÃO DE FRONTEIRA EM r=R, isolamento
-              TN[i][L]= TN[i][L-1]; // CONDIÇÃO DE FRONTEIRA EM r=R, isolamento        
+                  TN[i][L]= TN[i][L-1]; // CONDIÇÃO DE FRONTEIRA EM r=R, isolamento        
 
              }//end do for do i
              for (int j1=1; j1<=L; j1++){ // condição de fronteira em z=h, isolamento
@@ -436,21 +434,24 @@ double POT(double x){  // X é o teta
             }
         } //end do for do kk
 
-         double menor_erro = SQE10+SQE20+SQE30;
-        // if(menor_erro <= Menor){       
-        //   qot=q;
-        //   iot=ii;
-        //   Menor= menor_erro;
-           ero = menor_erro;
-        // }
-        // else
-        //  Menor= Menor;
-
-        cout << " qot" << q << "ero" << ero <<" ii =" << ii << "\n\n" ;
+        double menor_erro = SQE10+SQE20+SQE30;
+        if(menor_erro <= Menor){       
+          qot=q;
+          iot=ii;
+          Menor= menor_erro;
+          ero = menor_erro;
+        }
+        else
+         Menor= Menor;
     } //end do ii, Problema inverso
     
-   // cout << "\n" << qot;
-   //cd cout << "\n" << iot;
+    cout  << "\nqot " << qot << "\n";
+    cout  << "\nero " << ero << "\n";
+
+    
+
+
+   // cout << "\n" << iot;
     //---escolha do menor Erro---
 
     S1=(T1[1][2]+T1[1][5]+T1[1][8]+T1[3][2]+T1[3][5]+T1[3][8]+T1[6][2]+T1[6][5]+T1[6][8]+T1[11][2]+T1[11][5]+T1[11][8])/12;    
