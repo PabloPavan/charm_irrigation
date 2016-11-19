@@ -1,4 +1,4 @@
-CHARMDIR = /home/pablo/charm
+CHARMDIR = /home/pablo/charm/multicore-linux64
 CHARMC = $(CHARMDIR)/bin/charmc $(OPTS)
 default: Irrigacao
 

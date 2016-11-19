@@ -16,7 +16,8 @@
 Main(CkArgMsg* impl_msg);
 sync double KA(double x1, double x2);
 sync double POT(double x);
-void solucao(double qot);
+void retorno(double qot, double ero);
+void solucaoOtima(double ero, double qot);
 void terminado();
 };
  */
@@ -103,34 +104,62 @@ class CkIndex_Main:public CkIndex_Chare{
     static void _call_sdag_POT_marshall3(void* impl_msg, void* impl_obj);
     
     static void _marshallmessagepup_POT_marshall3(PUP::er &p,void *msg);
-    /* DECLS: void solucao(double qot);
+    /* DECLS: void retorno(double qot, double ero);
      */
     // Entry point registration at startup
     
-    static int reg_solucao_marshall4();
+    static int reg_retorno_marshall4();
     // Entry point index lookup
     
-    inline static int idx_solucao_marshall4() {
-      static int epidx = reg_solucao_marshall4();
+    inline static int idx_retorno_marshall4() {
+      static int epidx = reg_retorno_marshall4();
       return epidx;
     }
 
     
-    inline static int idx_solucao(void (Main::*)(double qot) ) {
-      return idx_solucao_marshall4();
+    inline static int idx_retorno(void (Main::*)(double qot, double ero) ) {
+      return idx_retorno_marshall4();
     }
 
 
     
-    static int solucao(double qot) { return idx_solucao_marshall4(); }
+    static int retorno(double qot, double ero) { return idx_retorno_marshall4(); }
     
-    static void _call_solucao_marshall4(void* impl_msg, void* impl_obj);
+    static void _call_retorno_marshall4(void* impl_msg, void* impl_obj);
     
-    static void _call_sdag_solucao_marshall4(void* impl_msg, void* impl_obj);
+    static void _call_sdag_retorno_marshall4(void* impl_msg, void* impl_obj);
     
-    static int _callmarshall_solucao_marshall4(char* impl_buf, void* impl_obj_void);
+    static int _callmarshall_retorno_marshall4(char* impl_buf, void* impl_obj_void);
     
-    static void _marshallmessagepup_solucao_marshall4(PUP::er &p,void *msg);
+    static void _marshallmessagepup_retorno_marshall4(PUP::er &p,void *msg);
+    /* DECLS: void solucaoOtima(double ero, double qot);
+     */
+    // Entry point registration at startup
+    
+    static int reg_solucaoOtima_marshall5();
+    // Entry point index lookup
+    
+    inline static int idx_solucaoOtima_marshall5() {
+      static int epidx = reg_solucaoOtima_marshall5();
+      return epidx;
+    }
+
+    
+    inline static int idx_solucaoOtima(void (Main::*)(double ero, double qot) ) {
+      return idx_solucaoOtima_marshall5();
+    }
+
+
+    
+    static int solucaoOtima(double ero, double qot) { return idx_solucaoOtima_marshall5(); }
+    
+    static void _call_solucaoOtima_marshall5(void* impl_msg, void* impl_obj);
+    
+    static void _call_sdag_solucaoOtima_marshall5(void* impl_msg, void* impl_obj);
+    
+    static int _callmarshall_solucaoOtima_marshall5(char* impl_buf, void* impl_obj_void);
+    
+    static void _marshallmessagepup_solucaoOtima_marshall5(PUP::er &p,void *msg);
     /* DECLS: void terminado();
      */
     // Entry point registration at startup
@@ -212,10 +241,15 @@ class CProxy_Main:public CProxy_Chare{
     
     double POT(double x, const CkEntryOptions *impl_e_opts=NULL);
 
-/* DECLS: void solucao(double qot);
+/* DECLS: void retorno(double qot, double ero);
  */
     
-    void solucao(double qot, const CkEntryOptions *impl_e_opts=NULL);
+    void retorno(double qot, double ero, const CkEntryOptions *impl_e_opts=NULL);
+
+/* DECLS: void solucaoOtima(double ero, double qot);
+ */
+    
+    void solucaoOtima(double ero, double qot, const CkEntryOptions *impl_e_opts=NULL);
 
 /* DECLS: void terminado();
  */
@@ -241,10 +275,13 @@ class Closure_Main {
     struct POT_3_closure;
 
 
-    struct solucao_4_closure;
+    struct retorno_4_closure;
 
 
-    struct terminado_5_closure;
+    struct solucaoOtima_5_closure;
+
+
+    struct terminado_6_closure;
 
 };
 

@@ -56,44 +56,73 @@
 
 #ifndef CK_TEMPLATES_ONLY
 
-    struct Closure_Main::solucao_4_closure : public SDAG::Closure {
+    struct Closure_Main::retorno_4_closure : public SDAG::Closure {
       double qot;
+      double ero;
 
 
-      solucao_4_closure() {
+      retorno_4_closure() {
         init();
       }
-      solucao_4_closure(CkMigrateMessage*) {
+      retorno_4_closure(CkMigrateMessage*) {
         init();
       }
       double & getP0() { return qot;}
+      double & getP1() { return ero;}
       void pup(PUP::er& __p) {
         __p | qot;
+        __p | ero;
         packClosure(__p);
       }
-      virtual ~solucao_4_closure() {
+      virtual ~retorno_4_closure() {
       }
-      PUPable_decl(SINGLE_ARG(solucao_4_closure));
+      PUPable_decl(SINGLE_ARG(retorno_4_closure));
     };
 #endif /* CK_TEMPLATES_ONLY */
 
 #ifndef CK_TEMPLATES_ONLY
 
-    struct Closure_Main::terminado_5_closure : public SDAG::Closure {
-      
+    struct Closure_Main::solucaoOtima_5_closure : public SDAG::Closure {
+      double ero;
+      double qot;
 
-      terminado_5_closure() {
+
+      solucaoOtima_5_closure() {
         init();
       }
-      terminado_5_closure(CkMigrateMessage*) {
+      solucaoOtima_5_closure(CkMigrateMessage*) {
+        init();
+      }
+      double & getP0() { return ero;}
+      double & getP1() { return qot;}
+      void pup(PUP::er& __p) {
+        __p | ero;
+        __p | qot;
+        packClosure(__p);
+      }
+      virtual ~solucaoOtima_5_closure() {
+      }
+      PUPable_decl(SINGLE_ARG(solucaoOtima_5_closure));
+    };
+#endif /* CK_TEMPLATES_ONLY */
+
+#ifndef CK_TEMPLATES_ONLY
+
+    struct Closure_Main::terminado_6_closure : public SDAG::Closure {
+      
+
+      terminado_6_closure() {
+        init();
+      }
+      terminado_6_closure(CkMigrateMessage*) {
         init();
       }
             void pup(PUP::er& __p) {
         packClosure(__p);
       }
-      virtual ~terminado_5_closure() {
+      virtual ~terminado_6_closure() {
       }
-      PUPable_decl(SINGLE_ARG(terminado_5_closure));
+      PUPable_decl(SINGLE_ARG(terminado_6_closure));
     };
 #endif /* CK_TEMPLATES_ONLY */
 
@@ -123,7 +152,8 @@ extern "C" void __xlater_roPup_numChares(void *_impl_pup_er) {
 Main(CkArgMsg* impl_msg);
 sync double KA(double x1, double x2);
 sync double POT(double x);
-void solucao(double qot);
+void retorno(double qot, double ero);
+void solucaoOtima(double ero, double qot);
 void terminado();
 };
  */
@@ -335,79 +365,169 @@ PUPable_def(SINGLE_ARG(Closure_Main::POT_3_closure))
 #endif /* CK_TEMPLATES_ONLY */
 
 #ifndef CK_TEMPLATES_ONLY
-/* DEFS: void solucao(double qot);
+/* DEFS: void retorno(double qot, double ero);
  */
 
-void CProxy_Main::solucao(double qot, const CkEntryOptions *impl_e_opts)
+void CProxy_Main::retorno(double qot, double ero, const CkEntryOptions *impl_e_opts)
 {
   ckCheck();
-  //Marshall: double qot
+  //Marshall: double qot, double ero
   int impl_off=0;
   { //Find the size of the PUP'd data
     PUP::sizer implP;
     implP|qot;
+    implP|ero;
     impl_off+=implP.size();
   }
   CkMarshallMsg *impl_msg=CkAllocateMarshallMsg(impl_off,impl_e_opts);
   { //Copy over the PUP'd data
     PUP::toMem implP((void *)impl_msg->msgBuf);
     implP|qot;
+    implP|ero;
   }
   if (ckIsDelegated()) {
-    int destPE=CkChareMsgPrep(CkIndex_Main::idx_solucao_marshall4(), impl_msg, &ckGetChareID());
-    if (destPE!=-1) ckDelegatedTo()->ChareSend(ckDelegatedPtr(),CkIndex_Main::idx_solucao_marshall4(), impl_msg, &ckGetChareID(),destPE);
+    int destPE=CkChareMsgPrep(CkIndex_Main::idx_retorno_marshall4(), impl_msg, &ckGetChareID());
+    if (destPE!=-1) ckDelegatedTo()->ChareSend(ckDelegatedPtr(),CkIndex_Main::idx_retorno_marshall4(), impl_msg, &ckGetChareID(),destPE);
   }
-  else CkSendMsg(CkIndex_Main::idx_solucao_marshall4(), impl_msg, &ckGetChareID(),0);
+  else CkSendMsg(CkIndex_Main::idx_retorno_marshall4(), impl_msg, &ckGetChareID(),0);
 }
 
 // Entry point registration function
 
-int CkIndex_Main::reg_solucao_marshall4() {
-  int epidx = CkRegisterEp("solucao(double qot)",
-      _call_solucao_marshall4, CkMarshallMsg::__idx, __idx, 0+CK_EP_NOKEEP);
-  CkRegisterMarshallUnpackFn(epidx, _callmarshall_solucao_marshall4);
-  CkRegisterMessagePupFn(epidx, _marshallmessagepup_solucao_marshall4);
+int CkIndex_Main::reg_retorno_marshall4() {
+  int epidx = CkRegisterEp("retorno(double qot, double ero)",
+      _call_retorno_marshall4, CkMarshallMsg::__idx, __idx, 0+CK_EP_NOKEEP);
+  CkRegisterMarshallUnpackFn(epidx, _callmarshall_retorno_marshall4);
+  CkRegisterMessagePupFn(epidx, _marshallmessagepup_retorno_marshall4);
 
   return epidx;
 }
 
 
-void CkIndex_Main::_call_solucao_marshall4(void* impl_msg, void* impl_obj_void)
+void CkIndex_Main::_call_retorno_marshall4(void* impl_msg, void* impl_obj_void)
 {
   Main* impl_obj = static_cast<Main *>(impl_obj_void);
   CkMarshallMsg *impl_msg_typed=(CkMarshallMsg *)impl_msg;
   char *impl_buf=impl_msg_typed->msgBuf;
-  /*Unmarshall pup'd fields: double qot*/
+  /*Unmarshall pup'd fields: double qot, double ero*/
   PUP::fromMem implP(impl_buf);
   double qot; implP|qot;
+  double ero; implP|ero;
   impl_buf+=CK_ALIGN(implP.size(),16);
   /*Unmarshall arrays:*/
-  impl_obj->solucao(qot);
+  impl_obj->retorno(qot, ero);
 }
 
-int CkIndex_Main::_callmarshall_solucao_marshall4(char* impl_buf, void* impl_obj_void) {
+int CkIndex_Main::_callmarshall_retorno_marshall4(char* impl_buf, void* impl_obj_void) {
   Main* impl_obj = static_cast< Main *>(impl_obj_void);
-  /*Unmarshall pup'd fields: double qot*/
+  /*Unmarshall pup'd fields: double qot, double ero*/
   PUP::fromMem implP(impl_buf);
   double qot; implP|qot;
+  double ero; implP|ero;
   impl_buf+=CK_ALIGN(implP.size(),16);
   /*Unmarshall arrays:*/
-  impl_obj->solucao(qot);
+  impl_obj->retorno(qot, ero);
   return implP.size();
 }
 
-void CkIndex_Main::_marshallmessagepup_solucao_marshall4(PUP::er &implDestP,void *impl_msg) {
+void CkIndex_Main::_marshallmessagepup_retorno_marshall4(PUP::er &implDestP,void *impl_msg) {
   CkMarshallMsg *impl_msg_typed=(CkMarshallMsg *)impl_msg;
   char *impl_buf=impl_msg_typed->msgBuf;
-  /*Unmarshall pup'd fields: double qot*/
+  /*Unmarshall pup'd fields: double qot, double ero*/
   PUP::fromMem implP(impl_buf);
   double qot; implP|qot;
+  double ero; implP|ero;
   impl_buf+=CK_ALIGN(implP.size(),16);
   /*Unmarshall arrays:*/
   if (implDestP.hasComments()) implDestP.comment("qot");
   implDestP|qot;
+  if (implDestP.hasComments()) implDestP.comment("ero");
+  implDestP|ero;
 }
-PUPable_def(SINGLE_ARG(Closure_Main::solucao_4_closure))
+PUPable_def(SINGLE_ARG(Closure_Main::retorno_4_closure))
+#endif /* CK_TEMPLATES_ONLY */
+
+#ifndef CK_TEMPLATES_ONLY
+/* DEFS: void solucaoOtima(double ero, double qot);
+ */
+
+void CProxy_Main::solucaoOtima(double ero, double qot, const CkEntryOptions *impl_e_opts)
+{
+  ckCheck();
+  //Marshall: double ero, double qot
+  int impl_off=0;
+  { //Find the size of the PUP'd data
+    PUP::sizer implP;
+    implP|ero;
+    implP|qot;
+    impl_off+=implP.size();
+  }
+  CkMarshallMsg *impl_msg=CkAllocateMarshallMsg(impl_off,impl_e_opts);
+  { //Copy over the PUP'd data
+    PUP::toMem implP((void *)impl_msg->msgBuf);
+    implP|ero;
+    implP|qot;
+  }
+  if (ckIsDelegated()) {
+    int destPE=CkChareMsgPrep(CkIndex_Main::idx_solucaoOtima_marshall5(), impl_msg, &ckGetChareID());
+    if (destPE!=-1) ckDelegatedTo()->ChareSend(ckDelegatedPtr(),CkIndex_Main::idx_solucaoOtima_marshall5(), impl_msg, &ckGetChareID(),destPE);
+  }
+  else CkSendMsg(CkIndex_Main::idx_solucaoOtima_marshall5(), impl_msg, &ckGetChareID(),0);
+}
+
+// Entry point registration function
+
+int CkIndex_Main::reg_solucaoOtima_marshall5() {
+  int epidx = CkRegisterEp("solucaoOtima(double ero, double qot)",
+      _call_solucaoOtima_marshall5, CkMarshallMsg::__idx, __idx, 0+CK_EP_NOKEEP);
+  CkRegisterMarshallUnpackFn(epidx, _callmarshall_solucaoOtima_marshall5);
+  CkRegisterMessagePupFn(epidx, _marshallmessagepup_solucaoOtima_marshall5);
+
+  return epidx;
+}
+
+
+void CkIndex_Main::_call_solucaoOtima_marshall5(void* impl_msg, void* impl_obj_void)
+{
+  Main* impl_obj = static_cast<Main *>(impl_obj_void);
+  CkMarshallMsg *impl_msg_typed=(CkMarshallMsg *)impl_msg;
+  char *impl_buf=impl_msg_typed->msgBuf;
+  /*Unmarshall pup'd fields: double ero, double qot*/
+  PUP::fromMem implP(impl_buf);
+  double ero; implP|ero;
+  double qot; implP|qot;
+  impl_buf+=CK_ALIGN(implP.size(),16);
+  /*Unmarshall arrays:*/
+  impl_obj->solucaoOtima(ero, qot);
+}
+
+int CkIndex_Main::_callmarshall_solucaoOtima_marshall5(char* impl_buf, void* impl_obj_void) {
+  Main* impl_obj = static_cast< Main *>(impl_obj_void);
+  /*Unmarshall pup'd fields: double ero, double qot*/
+  PUP::fromMem implP(impl_buf);
+  double ero; implP|ero;
+  double qot; implP|qot;
+  impl_buf+=CK_ALIGN(implP.size(),16);
+  /*Unmarshall arrays:*/
+  impl_obj->solucaoOtima(ero, qot);
+  return implP.size();
+}
+
+void CkIndex_Main::_marshallmessagepup_solucaoOtima_marshall5(PUP::er &implDestP,void *impl_msg) {
+  CkMarshallMsg *impl_msg_typed=(CkMarshallMsg *)impl_msg;
+  char *impl_buf=impl_msg_typed->msgBuf;
+  /*Unmarshall pup'd fields: double ero, double qot*/
+  PUP::fromMem implP(impl_buf);
+  double ero; implP|ero;
+  double qot; implP|qot;
+  impl_buf+=CK_ALIGN(implP.size(),16);
+  /*Unmarshall arrays:*/
+  if (implDestP.hasComments()) implDestP.comment("ero");
+  implDestP|ero;
+  if (implDestP.hasComments()) implDestP.comment("qot");
+  implDestP|qot;
+}
+PUPable_def(SINGLE_ARG(Closure_Main::solucaoOtima_5_closure))
 #endif /* CK_TEMPLATES_ONLY */
 
 #ifndef CK_TEMPLATES_ONLY
@@ -440,7 +560,7 @@ void CkIndex_Main::_call_terminado_void(void* impl_msg, void* impl_obj_void)
   CkFreeSysMsg(impl_msg);
   impl_obj->terminado();
 }
-PUPable_def(SINGLE_ARG(Closure_Main::terminado_5_closure))
+PUPable_def(SINGLE_ARG(Closure_Main::terminado_6_closure))
 #endif /* CK_TEMPLATES_ONLY */
 
 #ifndef CK_TEMPLATES_ONLY
@@ -459,8 +579,11 @@ void CkIndex_Main::__register(const char *s, size_t size) {
   // REG: sync double POT(double x);
   idx_POT_marshall3();
 
-  // REG: void solucao(double qot);
-  idx_solucao_marshall4();
+  // REG: void retorno(double qot, double ero);
+  idx_retorno_marshall4();
+
+  // REG: void solucaoOtima(double ero, double qot);
+  idx_solucaoOtima_marshall5();
 
   // REG: void terminado();
   idx_terminado_void();
@@ -482,7 +605,8 @@ void _registermain(void)
 Main(CkArgMsg* impl_msg);
 sync double KA(double x1, double x2);
 sync double POT(double x);
-void solucao(double qot);
+void retorno(double qot, double ero);
+void solucaoOtima(double ero, double qot);
 void terminado();
 };
 */
