@@ -9,6 +9,7 @@ class Irrigacao : public CBase_Irrigacao
 
 private:
 //    Declaracao das variaveis de modo privado
+    //const int L = 16, M = 16, nc = 60, nn =100;
 
     const double  qo = 0.035, R=0.15, h=0.33,dt=0.3,qM = 0.09, m=0.934, a=0.467, Ko=0.000004,
                   Ts=0.76,T0 = 0.65,Tr=0.01,T00=(T0-Tr)/(Ts-Tr);
@@ -21,11 +22,11 @@ public:
 
     Irrigacao ();
 
-    Irrigacao (CkMigrateMessage *msg);
-
+    Irrigacao (CkMigrateMessage *msg);   
     void worker(int emissor, double evap1, double evap2, int pos_ini, int pos_fim, int tamanho);
     double KA(double x1, double x2);
     double POT(double x);
+   // virtual void pup(PUP::er &i);
 
 };
 #endif

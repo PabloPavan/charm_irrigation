@@ -11,9 +11,10 @@ Irrigacao::Irrigacao () { }
 Irrigacao::Irrigacao (CkMigrateMessage *msg) { }
 
 
+
 void Irrigacao::worker (int emissor, double evap1, double evap2, int pos_ini, int pos_fim, int tamanho)
 {
-//    Inicialização das variaveis
+//    Inicializa?o das variaveis
 
     Menor =100000000;
     ero = 0;
@@ -263,11 +264,11 @@ void Irrigacao::worker (int emissor, double evap1, double evap2, int pos_ini, in
         }
 
 
-//CkPrintf("sou o chare %d -- esse é meu ii %d -- esse é o meu qot %f -- esse é o ero %f\n\n",thisIndex,ii,qot,ero);
+//CkPrintf("sou o chare %d -- esse ?meu ii %d -- esse ?o meu qot %f -- esse ?o ero %f\n\n",thisIndex,ii,qot,ero);
     } //end do ii, Problema inverso
-//CkPrintf("  sou o chare %d --  esse é o meu qot %f -- esse é o ero %f\n\n",thisIndex,qot,ero);
+//CkPrintf("  sou o chare %d --  esse ?o meu qot %f -- esse ?o ero %f\n\n",thisIndex,qot,ero);
 // melhor seria retornar as matrizes vetor_erro e vetor qot nteira para o main, onde ele trataria
-// o qot para achar o menor e executar a solução otima.
+// o qot para achar o menor e executar a solu?o otima.
 
 //retornar vetor
 
@@ -275,12 +276,12 @@ void Irrigacao::worker (int emissor, double evap1, double evap2, int pos_ini, in
 
 
 }
-double Irrigacao::KA(double x1, double x2)     // X1 É O Ko    // X2 É O TETA
+double Irrigacao::KA(double x1, double x2)     // X1 ?O Ko    // X2 ?O TETA
 {
     double y=0;
-    double a=0.467; // coeficiente do Psi na equação do potencial
-    double m=0.934; // expoente na equação do potencial
-    double n=2/(1-m); // expoente na equação do potencial, Burdines
+    double a=0.467; // coeficiente do Psi na equa?o do potencial
+    double m=0.934; // expoente na equa?o do potencial
+    double n=2/(1-m); // expoente na equa?o do potencial, Burdines
     double pow1,pow2,pow3;
     if(x2 <= 0)
         y=0;
@@ -300,14 +301,14 @@ double Irrigacao::KA(double x1, double x2)     // X1 É O Ko    // X2 É O TETA
     return(y);
 }
 
-// FUNÇÃO PARA CALCULAR O POTENCIAL MATRICIAL COM BASE NO TETA
+// FUN?O PARA CALCULAR O POTENCIAL MATRICIAL COM BASE NO TETA
 
-double Irrigacao::POT(double x)   // X é o teta
+double Irrigacao::POT(double x)   // X ?o teta
 {
     double y=0;
-    double a=0.674; //coeficiente do Psi na equação do potencial
-    double m=0.768; // expoente na equação do potencial
-    double n=2/(1-m); // expoente na equação do potencial, Burdines
+    double a=0.674; //coeficiente do Psi na equa?o do potencial
+    double m=0.768; // expoente na equa?o do potencial
+    double n=2/(1-m); // expoente na equa?o do potencial, Burdines
     double pow1,pow2,pow3;
     if (x <=0)
         y=0.35;
@@ -324,6 +325,69 @@ double Irrigacao::POT(double x)   // X é o teta
     }
     return(y);
 }
+// void Irrigacao::pup(PUP::er &i)
+// {
+//     i|qo;	
+//     i|R;
+//     i|h;
+//     i|dt;
+//     i|qM;
+//     i|m;
+//     i|a;
+//     i|Ko;
+//     i|Ts;
+//     i|T0;
+//     i|Tr;
+//     i|T00;
+//     i|Tsup;
+//     i|SQE10;
+//     i|SQE20;
+//     i|SQE30;
+//     i|S1;
+//     i|S2;
+//     i|S3;
+//     i|Med;
+//     i|SQT;
+//     i|SQT1;
+//     i|SQT2;
+//     i|SQT3;
+//     i|R2;
+//     i|q;
+//     i|qq;
+//     i|q1;
+//     i|q2;
+//     i|q3;
+//     i|r;
+//     i|KE;
+//     i|KW;
+//     i|KP;
+//     i|KN;
+//     i|KS;
+//     i|AE;
+//     i|AW;
+//     i|AN;
+//     i|AS;
+//     i|APO;
+//     i|PME;
+//     i|PMW;
+//     i|PMP;
+//     i|PMN;
+//     i|PMS;
+//     i|dq;
+//     i|Menor;
+//     i|qot;
+//     i|ero;
+//     i|dr;
+//     i|dz;
+//     i(T,L,M);
+//     i(T1,L,M);
+//     i(T2,L,M);
+//     i(T3,L,M);
+//     i(Sf,L,M);
+//     i(TN,L,M);
+//     i(To,L,M);
+  
+// }
 
 
 #include "Irrigacao.def.h"
