@@ -130,7 +130,7 @@ void Irrigacao::worker (int emissor, double evap1, double evap2)
    // for (int ii=pos_ini; ii <= pos_fim; ii++)   // contador dos chutes do PI
    // {
     if(thisIndex==0){
-      ii =ii*0.5;
+      ii =ii*1;
       }else{
         ii=ii*thisIndex;
         }
@@ -254,9 +254,9 @@ void Irrigacao::worker (int emissor, double evap1, double evap2)
             }
         } //end do for do kk
 
-
-
         double menor_erro = SQE10+SQE20+SQE30;
+        if(menor_erro>0.0){
+        
         if(menor_erro <= Menor)
         {
             qot=q;
@@ -268,7 +268,7 @@ void Irrigacao::worker (int emissor, double evap1, double evap2)
             Menor= Menor;
         }
 
-    
+    }
 //CkPrintf("sou o chare %d -- esse ?meu ii %d -- esse ?o meu qot %f -- esse ?o ero %f\n\n",thisIndex,ii,qot,ero);
     //} //end do ii, Problema inverso
 //CkPrintf("  sou o chare %d --  esse o meu qot %f -- esse ?o ero %f\n\n",thisIndex,qot,ero);
