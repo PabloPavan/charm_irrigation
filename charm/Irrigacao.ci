@@ -4,7 +4,8 @@ array [1D] Irrigacao {
 
 entry Irrigacao();
 
-entry void worker(int,double,double,int,int,int);
+//entry void worker(int,double,double,int,int,int);
+entry void worker(int,double,double);
 
  };
 };

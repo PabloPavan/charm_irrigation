@@ -12,7 +12,7 @@
 
 Main::Main (CkArgMsg* msg)
 {
-    numChares = 6;
+    numChares = 100;
     if (msg->argc > 1)
         numChares = atoi (msg->argv[1]);
     delete msg;
@@ -257,19 +257,22 @@ Main::Main (CkArgMsg* msg)
     mainProxy = thisProxy;
 
     CProxy_Irrigacao IrrigacaoArray = CProxy_Irrigacao::ckNew (numChares);
-    pos_ini=1;
-    pos_fim=0;
-    for (patual = 0; patual < (numChares); patual++)
-    {
-        pos_fim = tamanho + pos_fim;
+  //  pos_ini=1;
+   // pos_fim=0;
+   // for (patual = 0; patual < (numChares); patual++)
+   // {
+   //     pos_fim = tamanho + pos_fim;
 //	CkPrintf("Enviou para chare %d = %d -- %d\n", patual, pos_ini, pos_fim );
-        if (patual < (numChares ))
-        {
-            IrrigacaoArray[patual].worker(-1,evap1,evap2,pos_ini,pos_fim,tamanho);
-        }
+     //   if (patual < (numChares ))
+     //   {
+           // IrrigacaoArray[patual].worker(-1,evap1,evap2,pos_ini,pos_fim,tamanho);
+     //   CkPrintf("tempo main %f\n",CkWallTimer());
+            IrrigacaoArray.worker(-1,evap1,evap2);
 
-        pos_ini = pos_fim + 1;
-    }
+       // }
+
+     //   pos_ini = pos_fim + 1;
+   // }
 //////mainProxy.terminado();
 }
 
@@ -579,8 +582,8 @@ void Main::solucaoOtima(double ero, double qot)
     tempofinal = tempo2 -tempo1;
 
     CkPrintf("\n\nSolucao otima");
-    CkPrintf("  -- ero= %f",ero);
-    CkPrintf("  -- qot= %f\n\n",qot);
+    CkPrintf("  -- ero= %0.3f",ero);
+    CkPrintf("  -- qot= %0.4f\n\n",qot);
     CkPrintf("...: Tempo total= %0.2f s \n\n", tempofinal);
     mainProxy.terminado();
 }

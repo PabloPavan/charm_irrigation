@@ -25,9 +25,9 @@ double x[2][1];
 
 //--------DEFINIÇÃO DA MALHA ----------
 const int nn=100;  //iterações temporais, varia com k
-const int L=16;   // no. de pontos em r, varia com i
-const int M=16;   // no. de pontos em z, varia com j
-const int nc = 59;  //número de q testados
+const int L=64;   // no. de pontos em r, varia com i
+const int M=64;   // no. de pontos em z, varia com j
+const int nc = 100;  //número de q testados
 const double R=0.15;   // raio do tubo,m
 const double h=0.33;   //altura do solo,m
 const double dr=R/(L-1);

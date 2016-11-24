@@ -1,7 +1,7 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
-#define L 16
-#define M 16
+#define L 64
+#define M 64
 #define nc 60
 #define nn 100
 class Main : public CBase_Main

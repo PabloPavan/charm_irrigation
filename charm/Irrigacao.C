@@ -11,8 +11,8 @@ Irrigacao::Irrigacao () { }
 Irrigacao::Irrigacao (CkMigrateMessage *msg) { }
 
 
-
-void Irrigacao::worker (int emissor, double evap1, double evap2, int pos_ini, int pos_fim, int tamanho)
+//void Irrigacao::worker (int emissor, double evap1, double evap2, int pos_ini, int pos_fim, int tamanho)
+void Irrigacao::worker (int emissor, double evap1, double evap2)
 {
 //    Inicializa?o das variaveis
 
@@ -55,10 +55,10 @@ void Irrigacao::worker (int emissor, double evap1, double evap2, int pos_ini, in
     PMS = 0;
 //////////////////////////////////////////
 
-    dq=(qM-qo)/nc;
+    dq=(qM-qo)/numChares;
 
 
-//	CkPrintf("\"Executado no  chare %d no PE %d (pedido pelo chare %d) = %d -- %d (evap1=%f - evap2=%f .\n", thisIndex, CkMyPe(), emissor, pos_ini, pos_fim,evap1,evap2);
+	//CkPrintf("\"Executado no  chare %d no PE %d (pedido pelo chare %d)  (evap1=%f - evap2=%f ) %f \n", thisIndex, CkMyPe(), emissor,evap1,evap2,CkWallTimer());
 
     for (int j0=1; j0<=M; j0++)
     {
@@ -127,8 +127,13 @@ void Irrigacao::worker (int emissor, double evap1, double evap2, int pos_ini, in
 
 
 
-    for (int ii=pos_ini; ii <= pos_fim; ii++)   // contador dos chutes do PI
-    {
+   // for (int ii=pos_ini; ii <= pos_fim; ii++)   // contador dos chutes do PI
+   // {
+    if(thisIndex==0){
+      ii =ii*0.5;
+      }else{
+        ii=ii*thisIndex;
+        }
 
         q=qo+(ii-1)*dq;
 
@@ -263,19 +268,19 @@ void Irrigacao::worker (int emissor, double evap1, double evap2, int pos_ini, in
             Menor= Menor;
         }
 
-
+    
 //CkPrintf("sou o chare %d -- esse ?meu ii %d -- esse ?o meu qot %f -- esse ?o ero %f\n\n",thisIndex,ii,qot,ero);
-    } //end do ii, Problema inverso
-//CkPrintf("  sou o chare %d --  esse ?o meu qot %f -- esse ?o ero %f\n\n",thisIndex,qot,ero);
+    //} //end do ii, Problema inverso
+//CkPrintf("  sou o chare %d --  esse o meu qot %f -- esse ?o ero %f\n\n",thisIndex,qot,ero);
 // melhor seria retornar as matrizes vetor_erro e vetor qot nteira para o main, onde ele trataria
 // o qot para achar o menor e executar a solu?o otima.
 
 //retornar vetor
 
     mainProxy.retorno(qot,ero);
-
-
 }
+
+
 double Irrigacao::KA(double x1, double x2)     // X1 ?O Ko    // X2 ?O TETA
 {
     double y=0;
