@@ -1,5 +1,4 @@
 #include "main.decl.h"
-#include "main.decl.h"
 #include "main.h"
 #include "Irrigacao.decl.h"
 
@@ -251,7 +250,7 @@ Main::Main (CkArgMsg* msg)
 //CkPrintf("MAIN evap1 = %f - evap2 %f\n\n",x[1][1],x[2][1]);
 
 
-    tamanho = int (nc / (numChares)); //tamanho do intervalo de chutes (chutes / processos)
+ //   tamanho = int (nc / (numChares)); //tamanho do intervalo de chutes (chutes / processos)
 
 
     mainProxy = thisProxy;

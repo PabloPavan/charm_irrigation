@@ -255,19 +255,12 @@ void Irrigacao::worker (int emissor, double evap1, double evap2)
         } //end do for do kk
 
         double menor_erro = SQE10+SQE20+SQE30;
-        if(menor_erro>0.0){
-        
-        if(menor_erro <= Menor)
-        {
-            qot=q;
-            Menor= menor_erro;
-            ero = menor_erro;
-        }
-        else
-        {
-            Menor= Menor;
-        }
 
+        if(menor_erro>0.0){
+            qot=q;
+            ero = menor_erro;
+            
+        mainProxy.retorno(qot,ero);
     }
 //CkPrintf("sou o chare %d -- esse ?meu ii %d -- esse ?o meu qot %f -- esse ?o ero %f\n\n",thisIndex,ii,qot,ero);
     //} //end do ii, Problema inverso
@@ -277,7 +270,7 @@ void Irrigacao::worker (int emissor, double evap1, double evap2)
 
 //retornar vetor
 
-    mainProxy.retorno(qot,ero);
+    
 }
 
 

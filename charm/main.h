@@ -2,13 +2,12 @@
 #define __MAIN_H__
 #define L 64
 #define M 64
-#define nc 60
 #define nn 100
 class Main : public CBase_Main
 {
 private:
 //    Declaracao das variaveis de modo privado
-    int nump,tt[4][1],pos_ini,pos_fim,tamanho,patual,contador;
+    int nump,tt[4][1],contador;
 
     float tempofinal,tempo1,tempo2;
 
@@ -18,7 +17,7 @@ private:
     double n, tempo, valor, evap1,evap2,soma,soma1,soma2,Tsup,SQE10,SQE20,SQE30,S1,S2,S3,Med,SQT,SQT1,SQT2,SQT3,R2,
            q,qq,q1,q2,q3,r,KE,KW,KP,KN,KS,AE,AW,AN,AS,APO,PME,PMW,PMP,PMN,PMS,menor_erro,dq,Menor,
            TEv[4][1], A[4][2], A2[2][2], mataux[2][4], mat1[2][4], mat2[2][2], mat3[2][4], x[2][1], linha1[4],
-           vfinal[100], efinal[100], linha2[4], laux[4],te[100][1],
+           vfinal[10000], efinal[10000], linha2[4], laux[4],te[100][1],
            dr=R/(L-1),dz=h/(M-1),
            T[L][M], T1[L][M], T2[L][M], T3[L][M], Sf[L][M], TN[L][M],To[L][M];
 

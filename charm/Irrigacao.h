@@ -2,7 +2,6 @@
 #define __Irrigacao_H__
 #define L 64
 #define M 64
-#define nc 60
 #define nn 100
 class Irrigacao : public CBase_Irrigacao
 {
