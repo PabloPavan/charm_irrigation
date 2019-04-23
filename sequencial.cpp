@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include "tempo.h"
 //#include <windows.h>
+#define L 256	
+#define M 256
 
 using namespace std;
 
@@ -25,8 +27,8 @@ double x[2][1];
 
 //--------DEFINIÇÃO DA MALHA ----------
 const int nn=100;  //iterações temporais, varia com k
-const int L=64;   // no. de pontos em r, varia com i
-const int M=64;   // no. de pontos em z, varia com j
+//const int L=180;   // no. de pontos em r, varia com i
+//const int M=180;   // no. de pontos em z, varia com j
 const int nc = 100;  //número de q testados
 const double R=0.15;   // raio do tubo,m
 const double h=0.33;   //altura do solo,m
@@ -56,7 +58,7 @@ double T3[L][M];
 double Sf[L][M];
 double TN[L][M];
 double te[100][1];
-double erro[1][59];
+double erro[1][nc];
 
 int ii = 0,
     kk = 0,
